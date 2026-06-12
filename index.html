@@ -242,6 +242,13 @@ track.addEventListener('click', () => {
   lbl.textContent = gsOn ? 'Global South prices on' : 'Based in the Global South?';
   showResult();
 });
+
+function postHeight() {
+  window.parent.postMessage({ frameHeight: document.body.scrollHeight }, '*');
+}
+const resizeObserver = new ResizeObserver(postHeight);
+resizeObserver.observe(document.body);
+postHeight();
 </script>
 
 </body>
