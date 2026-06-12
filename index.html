@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Circles — Licence Pricing</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fff;
+  padding: 2rem 1.25rem 3rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 0.6rem;
+}
+
+.who-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.who-btn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  line-height: 1.4;
+}
+
+.who-btn:hover {
+  background: #f5f5f5;
+}
+
+.who-btn.active {
+  border-width: 1.5px;
+}
+
+.gs-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 13px;
+  color: #666;
+}
+
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: #e0e0e0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.toggle-knob {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  transition: left 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.toggle-track.on .toggle-knob { left: 19px; }
+
+.section-intro {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+  max-width: 580px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.card {
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  background: #fff;
+}
+
+.card-icon {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #999;
+}
+
+.card-use {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.card-price {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.card-avg {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.card-detail {
+  font-size: 12px;
+  color: #777;
+  line-height: 1.5;
+}
+
+.cta-wrap {
+  margin-top: 0.25rem;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.cta-btn:hover { opacity: 0.88; }
+
+.sep {
+  height: 1px;
+  background: #eee;
+  margin: 1.25rem 0;
+}
+
+.footnote {
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.hidden { display: none; }
+
+/* icon font */
+.icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+@media (max-width: 480px) {
+  .cards { grid-template-columns: 1fr; }
+  .who-bar { gap: 6px; }
+  .who-btn { font-size: 12px; padding: 5px 12px; }
+}
+</style>
+</head>
+<body>
+
+<p class="label">Who are you?</p>
+<div class="who-bar" id="whoBar">
+  <button class="who-btn" data-group="schools">Schools &amp; teachers</button>
+  <button class="who-btn" data-group="universities">Universities &amp; colleges</button>
+  <button class="who-btn" data-group="community">Community groups</button>
+  <button class="who-btn" data-group="ngos">NGOs &amp; nonprofits</button>
+  <button class="who-btn" data-group="companies">Businesses &amp; companies</button>
+</div>
+
+<div class="gs-row hidden" id="gsRow">
+  <div class="toggle-track" id="gsToggle"><div class="toggle-knob"></div></div>
+  <span id="gsLabel">Based in the Global South?</span>
+</div>
+
+<div id="content"></div>
+
+<div class="sep hidden" id="footSep"></div>
+<p class="footnote hidden" id="footnote">Prices are averages across audience/organization sizes, and specific license types. All prices in EUR.</p>
+
+<script>
+const icons = {
+  'calendar': '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>',
+  'refresh': '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
+  'infinity': '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-2-2.5-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1.5 6-4z"/><path d="M12 12c2 2.5 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1.5-6 4z"/></svg>',
+  'arrow': '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
+};
+
+const data = {
+  schools: {
+    intro: "Schools and state schools can screen the film for a single class, a staff group, or a community event.",
+    colors: {price:"#0F6E56", border:"#1D9E75", active:"#E1F5EE", btn:"#0F6E56"},
+    standard: [
+      {icon:"calendar", use:"Short-term", label:"One event or a year of screenings", price:"€60–190", avg:"avg. ~€110", detail:"One-time and 1-year public screening licences for schools and state schools."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence", price:"€110–320", avg:"avg. ~€200", detail:"Perpetual public screening licences for schools and state schools."},
+    ],
+    gs: [
+      {icon:"calendar", use:"Short-term", label:"One event or a year of screenings", price:"€0–140", avg:"avg. ~€60", detail:"One-time and 1-year public screening licences for schools and state schools. Some state school one-time licences are free."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence", price:"€80–220", avg:"avg. ~€140", detail:"Perpetual public screening licences for schools and state schools."},
+    ]
+  },
+  universities: {
+    intro: "Universities can screen publicly at events or give the whole campus on-demand access via a digital site licence hosted on your own systems.",
+    colors: {price:"#185FA5", border:"#378ADD", active:"#E6F1FB", btn:"#185FA5"},
+    standard: [
+      {icon:"calendar", use:"One event", label:"Single public screening", price:"€150–400", avg:"avg. ~€270", detail:"One-time public screening licences for universities. Price varies by audience size."},
+      {icon:"refresh", use:"Annual access", label:"Year of screenings or campus streaming", price:"€180–480", avg:"avg. ~€300", detail:"1-year public screening and 1-year digital site licences for universities."},
+      {icon:"infinity", use:"Permanent access", label:"Perpetual licence", price:"€300–800", avg:"avg. ~€600", detail:"Perpetual public screening and perpetual digital site licences for universities."},
+    ],
+    gs: [
+      {icon:"calendar", use:"One event", label:"Single public screening", price:"€100–280", avg:"avg. ~€190", detail:"One-time public screening licences for universities. Price varies by audience size."},
+      {icon:"refresh", use:"Annual access", label:"Year of screenings or campus streaming", price:"€120–340", avg:"avg. ~€210", detail:"1-year public screening and 1-year digital site licences for universities."},
+      {icon:"infinity", use:"Permanent access", label:"Perpetual licence", price:"€210–560", avg:"avg. ~€420", detail:"Perpetual public screening and perpetual digital site licences for universities."},
+    ]
+  },
+  community: {
+    intro: "For grassroots groups, homeschoolers and other community groups hosting public screenings.",
+    colors: {price:"#BA7517", border:"#EF9F27", active:"#FAEEDA", btn:"#BA7517"},
+    standard: [
+      {icon:"calendar", use:"One event", label:"Single community screening", price:"€100–200", avg:"avg. ~€150", detail:"One-time public screening licences for community groups. Price varies by audience size."},
+      {icon:"refresh", use:"A full programme", label:"Year of screenings", price:"€150–250", avg:"avg. ~€200", detail:"1-year public screening licences for community groups."},
+      {icon:"infinity", use:"Ongoing programme", label:"Permanent licence", price:"€250–450", avg:"avg. ~€350", detail:"Perpetual public screening licences for community groups."},
+    ],
+    gs: [
+      {icon:"calendar", use:"One event", label:"Single community screening", price:"€70–140", avg:"avg. ~€100", detail:"One-time public screening licences for community groups. Price varies by audience size."},
+      {icon:"refresh", use:"A full programme", label:"Year of screenings", price:"€100–180", avg:"avg. ~€140", detail:"1-year public screening licences for community groups."},
+      {icon:"infinity", use:"Ongoing programme", label:"Permanent licence", price:"€180–320", avg:"avg. ~€240", detail:"Perpetual public screening licences for community groups."},
+    ]
+  },
+  ngos: {
+    intro: "NGOs can screen publicly for outreach and events, or use the film privately for staff training. Both types are available at each duration.",
+    colors: {price:"#534AB7", border:"#7F77DD", active:"#EEEDFE", btn:"#534AB7"},
+    standard: [
+      {icon:"calendar", use:"One session", label:"Single screening — public or internal", price:"€90–300", avg:"avg. ~€175", detail:"One-time public screening and one-time internal training licences for NGOs. Public screenings are at the higher end of the range."},
+      {icon:"refresh", use:"Ongoing use", label:"Year of screenings — public or internal", price:"€140–420", avg:"avg. ~€255", detail:"1-year public screening and 1-year internal training licences for NGOs."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence — public or internal", price:"€240–700", avg:"avg. ~€430", detail:"Perpetual public screening and perpetual internal training licences for NGOs."},
+    ],
+    gs: [
+      {icon:"calendar", use:"One session", label:"Single screening — public or internal", price:"€60–210", avg:"avg. ~€120", detail:"One-time public screening and one-time internal training licences for NGOs. Public screenings are at the higher end of the range."},
+      {icon:"refresh", use:"Ongoing use", label:"Year of screenings — public or internal", price:"€100–300", avg:"avg. ~€180", detail:"1-year public screening and 1-year internal training licences for NGOs."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence — public or internal", price:"€170–490", avg:"avg. ~€300", detail:"Perpetual public screening and perpetual internal training licences for NGOs."},
+    ]
+  },
+  companies: {
+    intro: "Companies can use the film for internal staff training and development, or screen it publicly as part of a community initiative, CSR programme, or corporate event.",
+    colors: {price:"#993C1D", border:"#D85A30", active:"#FAECE7", btn:"#993C1D"},
+    standard: [
+      {icon:"calendar", use:"One session", label:"Single screening — public or internal", price:"€180–600", avg:"avg. ~€350", detail:"One-time public screening and one-time internal training licences for companies. Public screenings are at the higher end of the range."},
+      {icon:"refresh", use:"Ongoing use", label:"Year of screenings — public or internal", price:"€290–900", avg:"avg. ~€530", detail:"1-year public screening and 1-year internal training licences for companies."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence — public or internal", price:"€480–1500", avg:"avg. ~€880", detail:"Perpetual public screening and perpetual internal training licences for companies."},
+    ],
+    gs: [
+      {icon:"calendar", use:"One session", label:"Single screening — public or internal", price:"€120–420", avg:"avg. ~€240", detail:"One-time public screening and one-time internal training licences for companies. Public screenings are at the higher end of the range."},
+      {icon:"refresh", use:"Ongoing use", label:"Year of screenings — public or internal", price:"€200–630", avg:"avg. ~€370", detail:"1-year public screening and 1-year internal training licences for companies."},
+      {icon:"infinity", use:"Long-term", label:"Permanent licence — public or internal", price:"€340–1050", avg:"avg. ~€620", detail:"Perpetual public screening and perpetual internal training licences for companies."},
+    ]
+  }
+};
+
+let active = null;
+let gsOn = false;
+
+function hide() {
+  active = null;
+  gsOn = false;
+  const track = document.getElementById('gsToggle');
+  track.classList.remove('on');
+  track.style.background = '';
+  document.getElementById('gsLabel').textContent = 'Based in the Global South?';
+  document.getElementById('gsRow').classList.add('hidden');
+  document.getElementById('footSep').classList.add('hidden');
+  document.getElementById('footnote').classList.add('hidden');
+  document.getElementById('content').innerHTML = '';
+  document.querySelectorAll('.who-btn').forEach(b => { b.classList.remove('active'); b.style.cssText = ''; });
+}
+
+function show() {
+  const g = data[active];
+  const items = gsOn ? g.gs : g.standard;
+  const c = g.colors;
+  document.getElementById('gsRow').classList.remove('hidden');
+  document.getElementById('footSep').classList.remove('hidden');
+  document.getElementById('footnote').classList.remove('hidden');
+  document.getElementById('content').innerHTML = `
+    <p class="section-intro">${g.intro}</p>
+    <div class="cards">
+      ${items.map(item => `
+        <div class="card">
+          <div class="card-icon" style="color:${c.price}">${icons[item.icon]}</div>
+          <div class="card-use">${item.use}</div>
+          <div class="card-label">${item.label}</div>
+          <div class="card-price" style="color:${c.price}">${item.price}</div>
+          <div class="card-avg">${item.avg}</div>
+          <div class="card-detail">${item.detail}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="cta-wrap">
+      <a href="https://license.schoolcirclesfilm.com/" target="_blank" rel="noopener" class="cta-btn" style="background:${c.btn}">
+        Choose a licence ${icons.arrow}
+      </a>
+    </div>
+  `;
+}
+
+document.getElementById('whoBar').addEventListener('click', e => {
+  const btn = e.target.closest('.who-btn');
+  if (!btn) return;
+  const group = btn.dataset.group;
+  if (active === group) { hide(); return; }
+  active = group;
+  gsOn = false;
+  const track = document.getElementById('gsToggle');
+  track.classList.remove('on');
+  track.style.background = '';
+  document.getElementById('gsLabel').textContent = 'Based in the Global South?';
+  const c = data[active].colors;
+  document.querySelectorAll('.who-btn').forEach(b => { b.classList.remove('active'); b.style.cssText = ''; });
+  btn.classList.add('active');
+  btn.style.borderColor = c.border;
+  btn.style.color = c.price;
+  btn.style.background = c.active;
+  show();
+});
+
+const track = document.getElementById('gsToggle');
+const lbl = document.getElementById('gsLabel');
+track.addEventListener('click', () => {
+  if (!active) return;
+  gsOn = !gsOn;
+  track.classList.toggle('on', gsOn);
+  track.style.background = gsOn ? data[active].colors.btn : '';
+  lbl.textContent = gsOn ? 'Global South prices on' : 'Based in the Global South?';
+  show();
+});
+</script>
+
+</body>
+</html>
